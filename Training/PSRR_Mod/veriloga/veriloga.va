@@ -1,0 +1,25 @@
+
+`include "disciplines.vams"
+
+
+module PSRR_Model (vdd, vss, vout_error);
+    
+    input vdd, vss;
+    
+    output vout_error;
+    electrical vdd, vss, vout_error;
+
+   
+    parameter real psrr_dc_db = 80;         // DC PSRR in Decibels (dB).
+    parameter real psrr_pole_freq = 1k;     // Location of the first pole in the PSRR response (Hz).
+
+    
+    
+    analog begin
+        
+        
+        V(vout_error) <+ 0;
+
+    end
+endmodule
+

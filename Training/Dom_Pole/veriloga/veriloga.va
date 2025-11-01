@@ -1,0 +1,35 @@
+//
+// my_analog_lib/building_blocks/DominantPoleIntegrator.vams -- CORRECTED SYNTAX
+//
+// Description: High-gain integrator stage. Uses the numerically stable `idt()`
+//              function to model the dominant pole and GBW.
+//
+
+`include "disciplines.vams"
+`include "constants.vams"
+
+module DominantPoleIntegrator (in_p, in_n, out);
+    input in_p, in_n;
+    output out;
+    electrical in_p, in_n, out;
+
+    // --- Parameters for this stage ---
+    parameter real gbw = 5M from (0:inf);
+    parameter real R_in = 1G;
+    parameter real gain_max = 5000;
+
+    // --- Module-Level Variable Declarations ---
+    real gbw_rads; // <<< FIX: Declaration moved to the correct location
+
+    analog begin
+        
+        // --- Executable Statements Only ---
+        gbw_rads = 2 * `M_PI * gbw;
+
+        // Model the input resistance
+        I(in_p, in_n) <+ V(in_p, in_n) / R_in;
+
+        // Model a "leaky" integrator to limit the DC gain
+        I(out) <+ idt(V(in_p, in_n) * gbw_rads) + V(out)/gain_max;
+    end
+endmodule

@@ -1,0 +1,31 @@
+//
+// my_analog_lib/building_blocks/OutputStage.vams -- VERSION 2.1 (MIN/MAX FIX)
+//
+// Description: This version replaces the problematic `limit()` function with an
+//              equivalent and elegant nested `min()`/`max()` structure.
+//
+
+`include "disciplines.vams"
+`include "constants.vams" // Required for `slew`, `min`, and `max`.
+
+module OutputStage (vin, vout, vdd, vss);
+    input vin, vdd, vss;
+    output vout;
+    electrical vin, vout, vdd, vss;
+
+    // --- Parameters with Sensible Defaults ---
+    parameter real slew_rate_rise = 20M from (0:inf);
+    parameter real slew_rate_fall = -20M from (-inf:0);
+    parameter real vout_swing_high = 0.1 from [0:inf);
+    parameter real vout_swing_low = 0.1 from [0:inf);
+
+    analog begin
+        // This is the elegant, single-line solution that models both effects.
+        // It is functionally identical to using `limit()` but is more portable.
+        V(vout) <+ min( 
+                        max( slew(V(vin), slew_rate_rise, slew_rate_fall),
+                             V(vss) + vout_swing_low ),
+                        V(vdd) - vout_swing_high 
+                      );
+    end
+endmodule

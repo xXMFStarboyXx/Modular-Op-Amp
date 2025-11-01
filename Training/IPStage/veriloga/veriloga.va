@@ -1,0 +1,75 @@
+//
+// my_analog_lib/building_blocks/InputStage.vams -- FINAL DIAGNOSTIC VERSION
+//
+// Description: This version TEMPORARILY disables the ICMR check by forcing
+//              `degradation_factor = 1.0`. This is necessary to work around the
+//              simulator's `rampup` behavior which incorrectly violates the ICMR
+//              at the start of the simulation.
+//
+
+`include "disciplines.vams"
+
+module InputStage (
+    // 8 Total Ports
+    // Inputs (6)
+    in_p_raw, in_n_raw, vdd, vss,
+    v_psrr_error, v_cmrr_error,
+    // Outputs (2)
+    in_p_proc, in_n_proc
+);
+
+    // --- Port Declarations ---
+    input in_p_raw, in_n_raw, vdd, vss;
+    input v_psrr_error, v_cmrr_error;
+    output in_p_proc, in_n_proc;
+    electrical in_p_raw, in_n_raw, in_p_proc, in_n_proc, vdd, vss, v_psrr_error, v_cmrr_error;
+
+    // --- Internal Parameters with Defaults ---
+    parameter real icmr_high = 1.6;
+    parameter real icmr_low  = 0.6;
+    parameter real vos = 2m;
+    parameter real ibias = 1p;
+
+    // --- Internal Variables ---
+    real v_common_mode;
+    real degradation_factor;
+
+    analog begin
+        
+        I(in_p_raw) <+ ibias;
+        I(in_n_raw) <+ ibias;
+        
+        // --- TEMPORARY MODIFICATION FOR RAMPUP TEST ---
+        // Force the degradation_factor to 1.0 to ignore the ICMR violation
+        // that is artificially created by the simulator's `rampup` option.
+        degradation_factor = 1.0;
+        
+        /* --- ORIGINAL ICMR CODE (Temporarily Disabled) ---
+        // This is the correct logic, but it conflicts with the `rampup` convergence aid.
+        v_common_mode = (V(in_p_raw) + V(in_n_raw)) / 2.0;
+        
+        if ( (v_common_mode < icmr_high) && (v_common_mode > icmr_low) ) begin
+            degradation_factor = 1.0; // Operate normally
+        end else begin
+            degradation_factor = 1e-3; // Degrade performance
+        end
+        */
+
+        // The final assembly uses the V() access function on the error nodes.
+        V(in_p_proc) <+ V(in_p_raw) * degradation_factor + vos + V(v_psrr_error) + V(v_cmrr_error);
+        V(in_n_proc) <+ V(in_n_raw) * degradation_factor;
+
+        // The $strobe block is kept for final verification.
+   		 @(initial_step) begin
+	 	 	 $strobe("--- InputStage Debug (ICMR CHECK DISABLED) ---");
+       		 $strobe("vos parameter = %g", vos);
+       		 $strobe("icmr_high = %g", icmr_high);
+       		 $strobe("icmr_low = %g", icmr_low);
+       		 $strobe("V(in_p_raw) = %g", V(in_p_raw));
+       		 $strobe("V(in_n_raw) = %g", V(in_n_raw));
+       		 $strobe("degradation_factor (FORCED) = %g", degradation_factor); // Note the new text
+       		 $strobe("Final V(in_p_proc) = %g", V(in_p_proc));
+      		 $strobe("Final V(in_n_proc) = %g", V(in_n_proc));
+    	 end
+    end
+endmodule

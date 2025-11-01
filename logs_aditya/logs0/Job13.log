@@ -1,0 +1,137 @@
+*Info*    Exporting services from client ... 
+
+*Info*    Client has finished starting ... 
+
+
+
+*Info*    Configuring the session ...
+
+	Library      = Training
+	Cell         = OPAMP_Mod_Sym_TB
+	View         = schematic
+	Simulator    = spectre
+	State Path   = $AXL_SETUPDB_DIR/test_states
+	State Name   = ExplorerRun.0
+	Results DB   = /home/aditya/Desktop/Training/OPAMP_Mod_Sym_TB/maestro/results/maestro/ExplorerRun.0.rdb
+	Results Dir  = /home/aditya/simulation/Training/OPAMP_Mod_Sym_TB/maestro/results/maestro/ExplorerRun.0/1/Training:OPAMP_Mod_Sym_TB:1
+	Results Loc  = /home/aditya/simulation/Training/OPAMP_Mod_Sym_TB/maestro/results/maestro
+	Project Dir  = /home/aditya/simulation
+	Setup DB loc = /home/aditya/Desktop/Training/OPAMP_Mod_Sym_TB/maestro
+	File Encoding = 0
+
+
+*Info*    The simulation mode in Spectre has been changed from
+          'interactive' to 'batch' mode because ICLP.
+
+
+*Info*    The auto suspension is disabled.
+
+
+
+
+
+
+*Info*    Run start for Point ID (6 1) on testbench [
+          Training:OPAMP_Mod_Sym_TB:1 ].
+
+Resetting statistical vars
+
+*Info*    Setting parameter values ...
+
+Setting temp(T) = 27
+
+*Info*    Netlist Directory =
+          /home/aditya/simulation/Training/OPAMP_Mod_Sym_TB/maestro/results/maestro/ExplorerRun.0/1/Training:OPAMP_Mod_Sym_TB:1/netlist
+
+
+*Info*    Data Directory    =
+          /home/aditya/simulation/Training/OPAMP_Mod_Sym_TB/maestro/results/maestro/ExplorerRun.0/1/Training:OPAMP_Mod_Sym_TB:1
+
+
+*Info*    Creating Netlist for Point ID (6 1)
+
+generate netlist...
+Begin Incremental Netlisting Oct 15 06:02:45 2025
+WARNING (OSSHNL-160): The primitive, 'Training/Dom_Pole/veriloga', was not used in the last netlisting session in this
+current run directory. Therefore, re-netlisting all cell views where this
+primitive is instantiated.
+
+WARNING (OSSHNL-160): The primitive, 'Training/Sec_Pole/veriloga', was not used in the last netlisting session in this
+current run directory. Therefore, re-netlisting all cell views where this
+primitive is instantiated.
+
+End netlisting Oct 15 06:02:45 2025
+
+Netlisting Statistics:
+	Number of components:    6
+
+	Elapsed time:          0.0s
+Errors: 0	Warnings: 0
+      ...successful.
+compose simulator input file...
+      ...successful.
+
+*Info*    Running simulation on testbench [
+          Training:OPAMP_Mod_Sym_TB:1 ] for Point ID (6 1).
+
+Delete psf data in /home/aditya/simulation/Training/OPAMP_Mod_Sym_TB/maestro/results/maestro/ExplorerRun.0/1/Training:OPAMP_Mod_Sym_TB:1/psf.
+compose simulator input file...
+      ...successful.
+start simulator if needed...
+      ...successful.
+simulate...
+To view the simulator output, right-click on the test name, result 
+name, or any value in the "Results" tab of the Outputs section and 
+choose "Output Log" menu option.
+INFO (ADE-3067): Errors encountered during simulation. For more information, right-click
+        on a test name in the 'Results' tab of the Outputs pane and choose 'Output Log'
+        to view the simulation run log.
+reading simulation data...
+No data directory returned by spectre
+      ...unsuccessful.
+
+*Error*   Error ID  = 5011
+*Error*   Error Msg = Simulator failed to complete the simulation.
+
+          Error found by spectre during IC analysis, during transient
+          analysis `tran'.
+Error found by spectre during IC analysis,
+          during transient analysis `tran'.
+ERROR (SPECTRE-11006):
+          Matrix is singular (detected at `I0.I2:in_p_proc_flow' and
+          `I0.I13:idt0').
+ERROR (SPECTRE-16385): There were 7
+          attempts to find the DC solution. In some of those
+          attempts, a signal exceeded the blowup limit of its
+          quantity. T
+he last signal that failed is V(I0.net015) =
+          -1.00003 GV, for which the quantity is `V' and the blowup
+          limit is (1 GV). It is possible that the circui
+t has no DC
+          solution. If you really want signals this large, set the
+          `blowup' parameter of this quantity to a larger
+          value.
+ERROR (SPECTRE-16080): No DC solution found (no
+          convergence).  
+Error found by spectre during DC analysis,
+          during info `finalTimeOP'.
+Error found by spectre during DC
+          analysis, during info `finalTimeOP'.
+ERROR (SPECTRE-16041):
+          Analysis was skipped due to inability to compute operating
+          point.
+
+
+
+
+
+*Info*    Client has finished evaluating ... 
+
+
+*Info*    Run complete for Point ID (6 1) on testbench [
+          Training:OPAMP_Mod_Sym_TB:1 ].
+
+
+
+
+

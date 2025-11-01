@@ -1,0 +1,70 @@
+//
+// my_analog_lib/building_blocks/CoreFrequencyResponse.vams -- VERSION 4.0 (FINAL SYNTAX)
+//
+// Description: Final, syntactically correct version. All variable declarations
+//              have been moved to the module level, outside the analog block,
+//              to satisfy the compiler's strict declaration rules.
+//
+
+`include "disciplines.vams"
+
+module CoreFrequencyResponse (in_p, in_n, out);
+    input in_p, in_n;
+    output out;
+    electrical in_p, in_n, out;
+
+    // --- Local Constant Definition ---
+    localparam real M_PI = 3.14159265358979323846;
+
+    // --- Specification Parameters ---
+    parameter real gain_dc = 100k from (1:inf);
+    parameter real gbw = 1M from (0:inf);
+    parameter real phase_margin_deg = 65 from (0:180);
+    parameter real p2_freq = 10M from (0:inf);
+    parameter integer freq_mode = 0 from [0:1];
+
+
+    real p1_rads;
+    real p2_rads;
+    real den_coeffs[0:2];
+    real angle_in_rads;
+    real gbw_rads;
+    real gain_attenuation_at_gbw;
+    real compensated_gbw;
+    // (End of declarations)
+
+    analog begin
+
+        // --- STEP 1: Calculate the Second Pole (p2) FIRST ---
+        if (freq_mode == 0) begin
+            if (phase_margin_deg >= 90.0) begin
+                p2_rads = 1e15 * 2 * M_PI;
+            end else begin
+                angle_in_rads = (90.0 - phase_margin_deg) * (M_PI / 180.0);
+                p2_rads = (2 * M_PI * gbw) / tan(angle_in_rads);
+            end
+        end else begin
+            p2_rads = 2 * M_PI * p2_freq;
+        end
+
+        // --- STEP 2: Calculate the Compensation Factor ---
+        gbw_rads = 2 * M_PI * gbw;
+        gain_attenuation_at_gbw = sqrt(1 + pow(gbw_rads/p2_rads, 2));
+
+        // --- STEP 3: Create a Compensated GBW Target ---
+        compensated_gbw = gbw * gain_attenuation_at_gbw;
+
+        // --- STEP 4: Calculate the Dominant Pole (p1) using the Compensated GBW ---
+        p1_rads = 2 * M_PI * (compensated_gbw / gain_dc);
+        
+        // --- STEP 5: Populate the Denominator Array ---
+        den_coeffs[0] = 1.0;
+        den_coeffs[1] = (1/p1_rads) + (1/p2_rads);
+        den_coeffs[2] = 1/(p1_rads * p2_rads);
+
+        // --- STEP 6: Implement the Transfer Function ---
+        V(out) <+ laplace_nd( V(in_p, in_n), 
+                              {gain_dc},
+                              den_coeffs );
+    end
+endmodule

@@ -1,0 +1,22 @@
+// OpampParam.vams -- FINAL SPECTRE SYNTAX VERSION
+simulator lang=spectre
+
+// Parameters for your textbook problem
+parameters gain_max = 5000
+parameters gbw = 5M
+parameters phase_margin_deg = 60
+parameters slew_rate = 10e6
+parameters vos = 2m
+parameters icmr_high = 1.6
+parameters icmr_low = 0.6
+parameters vout_swing_high = 0.2
+parameters vout_swing_low = 0.2
+
+// Default parameters for blocks not in the main spec
+parameters ibias = 1p
+parameters R_in = 1G
+parameters R_out = 1
+parameters cmrr_dc = 200k
+parameters cmrr_pole_freq = 1k
+parameters psrr_dc_db = 80
+parameters psrr_pole_freq = 1k

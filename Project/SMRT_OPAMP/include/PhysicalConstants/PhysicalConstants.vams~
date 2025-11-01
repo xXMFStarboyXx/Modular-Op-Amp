@@ -1,0 +1,18 @@
+//
+`ifndef MY_PHYSICAL_CONSTANTS
+`define MY_PHYSICAL_CONSTANTS
+
+// Pi, for converting between Hz and rad/s
+`define M_PI 3.14159265358979323846
+
+// Boltzmann's constant in J/K
+`define P_K 1.380649e-23
+
+// Elementary charge in Coulombs
+`define P_Q 1.60217663e-19
+
+// Absolute zero in Celsius, for converting simulator temp to Kelvin
+`define P_CELSIUS_TO_KELVIN_OFFSET 273.15
+
+`endif
+

@@ -1,0 +1,94 @@
+//
+// my_analog_lib/models/SmartOpAmp.vams -- VERSION 1.0 (PROTOTYPE 1 ASSEMBLY)
+//
+// Description: Assembles the verified "Prototype 1" building blocks into a
+//              complete, configurable operational amplifier behavioral model.
+//
+
+`include "disciplines.vams"
+
+// --- Include the definitions of all the building blocks to be used ---
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/building_blocks/InputStage/InputStage.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/building_blocks/CoreFrequencyResponse/CoreFrequencyResponse.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/building_blocks/OutputStage/OutputStage.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/building_blocks/CMRR_Model/CMRR_Model.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/building_blocks/PSRR_Model/PSRR_Model.vams"
+// Note: We include PSRR_Model even as a placeholder to correctly ground its error port.
+
+module SmartOpAmp(in_p, in_n, out, vdd, vss);
+    // Standard ports
+    input in_p, in_n, vdd, vss;
+    output out;
+    electrical in_p, in_n, out, vdd, vss;
+
+    // --- Internal Electrical Nets ---
+    // These are the "wires" that connect our building blocks together.
+    electrical in_p_processed, in_n_processed;
+    electrical v_cmrr_err, v_psrr_err;
+    electrical core_output;
+
+    // --- Instantiations of the Building Blocks ---
+    
+    // 1. Error Source Blocks (Placeholders for now)
+    // Their outputs (v_cmrr_err, v_psrr_err) will be 0V in Prototype 1.
+    CMRR_Model cmrr_block (.in_p(in_p), .in_n(in_n), .vout_error(v_cmrr_err));
+    PSRR_Model psrr_block (.vdd(vdd), .vss(vss), .vout_error(v_psrr_err));
+
+    // 2. The Input Stage Block
+    // It takes the raw inputs and injects the errors.
+    InputStage input_block (
+        .in_p_raw(in_p), 
+        .in_n_raw(in_n),
+        .vdd(vdd), 
+        .vss(vss),
+        .in_p_proc(in_p_processed), 
+        .in_n_proc(in_n_processed),
+        .v_cmrr_error(v_cmrr_err),
+        .v_psrr_error(v_psrr_err)
+    );
+
+    // 3. The Core AC Response Block
+    // It takes the processed inputs and models the frequency response.
+    CoreFrequencyResponse core_ac (
+        .in_p(in_p_processed), 
+        .in_n(in_n_processed),
+        .out(core_output)
+    );
+
+    // 4. The Output Stage Block
+    // It takes the ideal core output and adds large-signal limitations.
+    OutputStage output_block (
+        .vin(core_output), 
+        .out(out), 
+        .vdd(vdd), 
+        .vss(vss)
+    );
+
+    analog begin
+        // The main analog block is intentionally empty. This is a purely
+        // structural model. All behavior is contained within the instantiated
+        // building blocks. We now use `defparam` to configure them.
+
+        // --- Parameter Passing using defparam ---
+        // This is where we take the high-level parameters (passed from the testbench)
+        // and funnel them down to the correct blocks.
+
+        // Configure the Input Stage
+        defparam input_block.icmr_high = icmr_high;
+        defparam input_block.icmr_low = icmr_low;
+        defparam input_block.vos = vos;
+        defparam input_block.ibias = ibias;
+
+        // Configure the Core AC Response
+        defparam core_ac.gain_dc = gain_dc;
+        defparam core_ac.gbw = gbw;
+        defparam core_ac.phase_margin_deg = phase_margin_deg;
+        defparam core_ac.freq_mode = freq_mode;
+
+        // Configure the Output Stage
+        defparam output_block.slew_rate_rise = slew_rate;
+        defparam output_block.slew_rate_fall = -slew_rate;
+        defparam output_block.vout_swing_high = vout_swing_high;
+        defparam output_block.vout_swing_low = vout_swing_low;
+    end
+endmodule

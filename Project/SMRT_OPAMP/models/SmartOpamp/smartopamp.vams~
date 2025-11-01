@@ -1,0 +1,76 @@
+// my_analog_lib/models/SmartOpAmp.vams -- (PROTOTYPE 1 ASSEMBLY)
+//
+
+`include "disciplines.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/include/OpampParam/OpampParam.vams" 
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/building_blocks/InputStage/InputStage.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP//building_blocks/CoreFrequencyResponse/CoreFrequencyResponse.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/building_blocks/OutputStage/OutputStage.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/building_blocks/CMRR_Model/CMRR.vams" 
+// Note: PSRR_Model.vams is NOT included because its phase 2.
+
+module SmartOpAmp(in_p, in_n, out, vdd, vss);
+    // Standard ports
+    input in_p, in_n, vdd, vss;
+    output out;
+    electrical in_p, in_n, out, vdd, vss;
+    
+    // The ground node is essential.
+    ground gnd;
+
+    // --- Internal Electrical Nets ---
+    electrical in_p_processed, in_n_processed;
+    electrical v_cmrr_err;      // The net to connect the CMRR error.
+    electrical core_output;     // The net connecting the Core to the OutputStage.
+
+    analog begin
+
+        // --- 1. Model Global Effects (Partial Instantiation for Prototype 1) ---
+
+        // We instantiate the CMRR placeholder block. Its output v_cmrr_err will be 0V.
+        CMRR_Model cmrr_block (
+            .in_p(in_p), 
+            .in_n(in_n), 
+            .vout_error(v_cmrr_err)
+        );
+
+        // The PSRR_Model block is NOT instantiated.
+
+        // --- 2. Model the Input Stage ---
+        InputStage input_block (
+            .in_p_raw(in_p), 
+            .in_n_raw(in_n),
+            .vdd(vdd),
+            .vss(vss),
+            .in_p_proc(in_p_processed), 
+            .in_n_proc(in_n_processed),
+
+            // Here is the solution to your question:
+            // The v_cmrr_error port is connected to the output of our placeholder block.
+            .v_cmrr_error(v_cmrr_err),
+            // The v_psrr_error port has nothing to connect to, so we TIE IT TO GROUND (0V).
+            .v_psrr_error(gnd)
+        );
+
+        // --- 3. Model the Core AC Response ---
+        CoreFrequencyResponse core_ac (
+            .in_p(in_p_processed), 
+            .in_n(in_n_processed),
+            .out(core_output)
+            // Note: We need to pass the parameters down!
+            // defparam core_ac.gain_dc = gain_dc;
+            // defparam core_ac.gbw = gbw;
+            // ... etc. (Or pass as parameters in Verilog-AMS instantiation)
+        );
+
+        // --- 4. Model the Output Stage ---
+        OutputStage output_block (
+            .vin(core_output), 
+            .out(out), 
+            .vdd(vdd), 
+            .vss(vss)
+            // defparam output_block.slew_rate = slew_rate;
+            // ... etc.
+        );
+    end
+endmodule

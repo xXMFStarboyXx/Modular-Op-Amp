@@ -1,0 +1,39 @@
+//
+// my_analog_lib/includes/OpampParam.vams -- FINAL DEFINITIVE SPECTRE SYNTAX
+//
+// This is a global parameter file for ADE. It uses the `simulator lang`
+// directive to ensure it is parsed correctly by Spectre.
+//
+
+simulator lang=spectre
+
+parameters vdd_supply = 1.8
+parameters vss_supply = 0
+parameters load_capacitance = 10p
+parameters power_diss_max = 0.8m
+
+parameters gain_dc = 5000
+parameters gbw = 5M
+parameters phase_margin_deg = 60
+parameters slew_rate = 10e6
+parameters vos = 2m
+
+parameters vout_swing_high = 0.2
+parameters vout_swing_low = 0.2
+
+parameters icmr_high = 1.6
+parameters icmr_low = 0.6
+
+// Parameters needed by the building blocks that aren't in the main spec
+parameters ibias = 1p 
+parameters freq_mode = 0 
+parameters p2_freq = 10M
+parameters R_in = 1G
+parameters R_out = 1
+parameters cmrr_dc = 200k
+parameters cmrr_pole_freq = 1k
+parameters psrr_dc_db = 80
+parameters psrr_pole_freq = 1k
+
+// Note for future use
+// parameters v_noise_density = 15n

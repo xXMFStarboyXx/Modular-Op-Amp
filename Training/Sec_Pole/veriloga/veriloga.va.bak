@@ -1,0 +1,41 @@
+//
+// my_analog_lib/building_blocks/SecondPoleFilter.vams -- CORRECTED SYNTAX
+//
+// Description: A simple, unity-gain low-pass filter to model the second pole
+//              of the op-amp, which is used to set the phase margin.
+//
+
+`include "disciplines.vams"
+`include "constants.vams"
+
+module SecondPoleFilter (vin, vout);
+    input vin;
+    output vout;
+    electrical vin, vout;
+
+    // --- Parameters for this stage ---
+    parameter real gbw = 5M from (0:inf);
+    parameter real phase_margin_deg = 60 from (0:180);
+
+    // --- Module-Level Variable Declarations ---
+    real p2_rads, angle_in_rads;   // <<< FIX: Declaration moved to correct location
+    real den_coeffs[0:1];         // <<< FIX: Declaration moved to correct location
+
+    analog begin
+        
+        // --- Executable Statements Only ---
+        if (phase_margin_deg >= 90.0) begin
+            p2_rads = 1e15 * 2 * `M_PI`;
+        end else begin
+            angle_in_rads = (90.0 - phase_margin_deg) * (`M_PI` / 180.0);
+            p2_rads = (2 * `M_PI` * gbw) / tan(angle_in_rads);
+        end
+
+        // Populate the denominator array
+        den_coeffs[0] = 1.0;
+        den_coeffs[1] = 1/p2_rads;
+
+        // Unity-gain, single-pole laplace filter
+        V(vout) <+ laplace_nd( V(vin), {1.0}, den_coeffs );
+    end
+endmodule

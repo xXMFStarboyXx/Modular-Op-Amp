@@ -1,0 +1,91 @@
+
+
+
+	Library      = Training
+	Cell         = OPAMP_Mod_Sym_TB
+	View         = schematic
+	Simulator    = spectre
+	State Path   = $AXL_SETUPDB_DIR/test_states
+	State Name   = ExplorerRun.0
+	Results DB   = /home/aditya/Desktop/Training/OPAMP_Mod_Sym_TB/maestro/results/maestro/ExplorerRun.0.rdb
+	Results Dir  = /home/aditya/simulation/Training/OPAMP_Mod_Sym_TB/maestro/results/maestro/ExplorerRun.0/1/Training:OPAMP_Mod_Sym_TB:1
+	Results Loc  = /home/aditya/simulation/Training/OPAMP_Mod_Sym_TB/maestro/results/maestro
+	Project Dir  = /home/aditya/simulation
+	Setup DB loc = /home/aditya/Desktop/Training/OPAMP_Mod_Sym_TB/maestro
+	File Encoding = 0
+
+
+
+
+
+
+
+
+
+
+Resetting statistical vars
+
+
+Setting temp(T) = 27
+
+
+
+
+
+
+generate netlist...
+Begin Incremental Netlisting Oct 15 04:25:16 2025
+WARNING (OSSHNL-160): The primitive, 'Training/FreqRespTB/veriloga', was not used in the last netlisting session in this
+current run directory. Therefore, re-netlisting all cell views where this
+primitive is instantiated.
+
+WARNING (OSSHNL-159): The primitive, 'Training/IPStage/veriloga', has been updated since the last netlisting session
+in this current run directory. Therefore, re-netlisting all cell views where
+this primitive is instantiated.
+
+WARNING (OSSHNL-160): The primitive, 'Training/PSRR_Mod/veriloga', was not used in the last netlisting session in this
+current run directory. Therefore, re-netlisting all cell views where this
+primitive is instantiated.
+
+WARNING (OSSHNL-196): The value of the "nlAction" property of library 'analogLib', cell 'gnd', view 'symbol'
+has changed since the last netlisting session in current run directory. Some
+cell views need to be re-netlisted.
+
+End netlisting Oct 15 04:25:16 2025
+
+Netlisting Statistics:
+	Number of components:    9
+
+	Elapsed time:          0.0s
+Errors: 0	Warnings: 0
+      ...successful.
+compose simulator input file...
+      ...successful.
+
+
+Delete psf data in /home/aditya/simulation/Training/OPAMP_Mod_Sym_TB/maestro/results/maestro/ExplorerRun.0/1/Training:OPAMP_Mod_Sym_TB:1/psf.
+compose simulator input file...
+      ...successful.
+start simulator if needed...
+      ...successful.
+simulate...
+To view the simulator output, right-click on the test name, result 
+name, or any value in the "Results" tab of the Outputs section and 
+choose "Output Log" menu option.
+INFO (ADE-3067): Errors encountered during simulation. For more information, right-click
+        on a test name in the 'Results' tab of the Outputs pane and choose 'Output Log'
+        to view the simulation run log.
+reading simulation data...
+No data directory returned by spectre
+      ...unsuccessful.
+
+
+
+
+
+
+
+
+
+
+

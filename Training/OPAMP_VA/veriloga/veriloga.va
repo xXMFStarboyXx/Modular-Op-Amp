@@ -1,0 +1,71 @@
+//
+// my_analog_lib/models/SmartOpAmp.vams -- VERSION 1.0 (PROTOTYPE 1 ASSEMBLY)
+//
+// Description: Assembles the verified "Prototype 1" building blocks into a
+//              complete, configurable operational amplifier behavioral model.
+//
+
+`include "disciplines.vams"
+`include "constants.vams"
+
+// --- Include the definitions of all the building blocks to be used ---
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/buliding_blocks/InputStage/InputStage.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/buliding_blocks/CoreFreqResp/CoreFreqResp.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/buliding_blocks/OutputStage/OutputStage.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/buliding_blocks/CMRR/cmrr.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/buliding_blocks/PSRR/PSRR.vams"
+
+module SmartOpAmp(in_p, in_n, out, vdd, vss);
+    input in_p, in_n, vdd, vss;
+    output out;
+    electrical in_p, in_n, out, vdd, vss;
+    
+    // --- Internal Electrical Nets ---
+    // These are declared at the module level. We will MANUALLY EDIT the symbol
+    // if the generator creates extra pins for them.
+    electrical in_p_processed, in_n_processed;
+    electrical v_cmrr_err, v_psrr_err;
+    electrical core_output;
+
+    // --- Instantiations with Named Port Mapping (This is where ALL wiring happens) ---
+    
+    CMRR_TB cmrr_block (
+        .in_p(in_p), 
+        .in_n(in_n), 
+        .vout_error(v_cmrr_err)
+    );
+
+    PSRR_Model psrr_block (
+        .vdd(vdd), 
+        .vss(vss), 
+        .vout_error(v_psrr_err)
+    );
+    
+    // The 8-pin InputStage is the summing junction.
+    InputStage input_block (
+        .in_p_raw(in_p), 
+        .in_n_raw(in_n),
+        .vdd(vdd), 
+        .vss(vss),
+        .in_p_proc(in_p_processed), 
+        .in_n_proc(in_n_processed),
+        .v_cmrr_error(v_cmrr_err),
+        .v_psrr_error(v_psrr_err)
+    );
+
+    CoreFrequencyResponse core_ac (
+        .in_p(in_p_processed), 
+        .in_n(in_n_processed),
+        .out(core_output)
+    );
+
+    OutputStage output_block (
+        .vin(core_output), 
+        .out(out), 
+        .vdd(vdd), 
+        .vss(vss)
+    );
+
+    // There is NO analog block.
+
+endmodule

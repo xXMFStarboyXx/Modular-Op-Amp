@@ -1,0 +1,140 @@
+*Info*    Exporting services from client ... 
+
+*Info*    Client has finished starting ... 
+
+
+
+*Info*    Configuring the session ...
+
+	Library      = Training
+	Cell         = OPAMP_VA_tb
+	View         = schematic
+	Simulator    = spectre
+	State Path   = $AXL_SETUPDB_DIR/test_states
+	State Name   = ExplorerRun.0
+	Results DB   = /home/aditya/Desktop/Training/OPAMP_VA_tb/maestro/results/maestro/ExplorerRun.0.rdb
+	Results Dir  = /home/aditya/simulation/Training/OPAMP_VA_tb/maestro/results/maestro/ExplorerRun.0/1/Training:OPAMP_VA_tb:1
+	Results Loc  = /home/aditya/simulation/Training/OPAMP_VA_tb/maestro/results/maestro
+	Project Dir  = /home/aditya/simulation
+	Setup DB loc = /home/aditya/Desktop/Training/OPAMP_VA_tb/maestro
+	File Encoding = 0
+
+
+*Info*    The simulation mode in Spectre has been changed from
+          'interactive' to 'batch' mode because ICLP.
+
+
+*Info*    The auto suspension is disabled.
+
+
+
+
+
+
+*Info*    Run start for Point ID (0 1) on testbench [
+          Training:OPAMP_VA_tb:1 ].
+
+Resetting statistical vars
+
+*Info*    Setting parameter values ...
+
+Setting temp(T) = 27
+
+*Info*    Netlist Directory =
+          /home/aditya/simulation/Training/OPAMP_VA_tb/maestro/results/maestro/ExplorerRun.0/1/Training:OPAMP_VA_tb:1/netlist
+
+
+*Info*    Data Directory    =
+          /home/aditya/simulation/Training/OPAMP_VA_tb/maestro/results/maestro/ExplorerRun.0/1/Training:OPAMP_VA_tb:1
+
+
+*Info*    Creating Netlist for Point ID (0 1)
+
+generate netlist...
+Initializing the control file using cp:
+    cp /.apps/IC617/tools.lnx86/dfII/etc/si/control.spectre /home/aditya/simulation/Training/OPAMP_VA_tb/maestro/results/maestro/ExplorerRun.0/1/Training:OPAMP_VA_tb:1/netlist/control
+Copying Spectre source file 'spectre.inp'
+Copying Spectre command file 'spectre.sim'
+Begin Incremental Netlisting Oct  7 07:32:24 2025
+ERROR (OSSHNL-913): Netlisting failed because terminal 'out' of instance 'I2' in cellview 'Training/OPAMP_VA_tb/schematic'
+does not exist in switch master 'Training/OPAMP_VA/veriloga'. To continue netlisting, either set
+the 'simCheckTermMismatchAction' to 'ignore', or set the
+'simCheckTermMismatchAction' to 'warning' and 'nlAction' to 'ignore' for the
+missing terminal.
+
+ERROR (OSSHNL-913): Netlisting failed because terminal 'in_p' of instance 'I2' in cellview 'Training/OPAMP_VA_tb/schematic'
+does not exist in switch master 'Training/OPAMP_VA/veriloga'. To continue netlisting, either set
+the 'simCheckTermMismatchAction' to 'ignore', or set the
+'simCheckTermMismatchAction' to 'warning' and 'nlAction' to 'ignore' for the
+missing terminal.
+
+ERROR (OSSHNL-913): Netlisting failed because terminal 'in_n' of instance 'I2' in cellview 'Training/OPAMP_VA_tb/schematic'
+does not exist in switch master 'Training/OPAMP_VA/veriloga'. To continue netlisting, either set
+the 'simCheckTermMismatchAction' to 'ignore', or set the
+'simCheckTermMismatchAction' to 'warning' and 'nlAction' to 'ignore' for the
+missing terminal.
+
+End netlisting Oct  7 07:32:24 2025
+ERROR (OSSHNL-514): Netlist generation failed because of the errors reported above. The netlist might not have been generated at all, or the generated netlist could be corrupt. Fix the reported errors and regenerate the netlist.
+      ...unsuccessful.
+
+*Error*   Error ID  = 5012
+*Error*   Error Msg = Failed to create netlist.
+
+
+
+
+
+
+
+
+
+*Info*    Run start for Point ID (0 1) on testbench [
+          Training:OPAMP_VA_tb:1 ].
+
+Resetting statistical vars
+
+*Info*    Setting parameter values ...
+
+Setting temp(T) = 27
+
+*Info*    Netlist Directory =
+          /home/aditya/simulation/Training/OPAMP_VA_tb/maestro/results/maestro/ExplorerRun.0/1/Training:OPAMP_VA_tb:1/netlist
+
+
+*Info*    Data Directory    =
+          /home/aditya/simulation/Training/OPAMP_VA_tb/maestro/results/maestro/ExplorerRun.0/1/Training:OPAMP_VA_tb:1
+
+
+*Info*    Creating Netlist for Point ID (0 1)
+
+generate netlist...
+Begin Incremental Netlisting Oct  7 07:32:24 2025
+ERROR (OSSHNL-913): Netlisting failed because terminal 'out' of instance 'I2' in cellview 'Training/OPAMP_VA_tb/schematic'
+does not exist in switch master 'Training/OPAMP_VA/veriloga'. To continue netlisting, either set
+the 'simCheckTermMismatchAction' to 'ignore', or set the
+'simCheckTermMismatchAction' to 'warning' and 'nlAction' to 'ignore' for the
+missing terminal.
+
+ERROR (OSSHNL-913): Netlisting failed because terminal 'in_p' of instance 'I2' in cellview 'Training/OPAMP_VA_tb/schematic'
+does not exist in switch master 'Training/OPAMP_VA/veriloga'. To continue netlisting, either set
+the 'simCheckTermMismatchAction' to 'ignore', or set the
+'simCheckTermMismatchAction' to 'warning' and 'nlAction' to 'ignore' for the
+missing terminal.
+
+ERROR (OSSHNL-913): Netlisting failed because terminal 'in_n' of instance 'I2' in cellview 'Training/OPAMP_VA_tb/schematic'
+does not exist in switch master 'Training/OPAMP_VA/veriloga'. To continue netlisting, either set
+the 'simCheckTermMismatchAction' to 'ignore', or set the
+'simCheckTermMismatchAction' to 'warning' and 'nlAction' to 'ignore' for the
+missing terminal.
+
+End netlisting Oct  7 07:32:24 2025
+ERROR (OSSHNL-514): Netlist generation failed because of the errors reported above. The netlist might not have been generated at all, or the generated netlist could be corrupt. Fix the reported errors and regenerate the netlist.
+      ...unsuccessful.
+
+*Error*   Error ID  = 5012
+*Error*   Error Msg = Failed to create netlist.
+
+
+
+

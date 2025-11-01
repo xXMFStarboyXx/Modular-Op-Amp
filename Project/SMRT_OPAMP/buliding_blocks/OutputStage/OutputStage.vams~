@@ -1,0 +1,37 @@
+//
+// my_analog_lib/building_blocks/OutputStage.vams
+//
+// Description: Models the key large-signal behaviors of an op-amp's output stage.
+//              This version combines Slew Rate and Voltage Swing limiting.
+//
+
+`include "disciplines.vams"
+module OutputStage (vin, vout, vdd, vss);
+    input vin, vdd, vss;
+    output vout;
+    electrical vin, vout, vdd, vss;
+
+    // --- Parameters with Sensible Defaults ---
+    // User can override these in the top-level model, but the block
+    // will work correctly if no parameters are passed.
+    
+    // Slew rate in V/s. Default to 20 V/us.
+    parameter real slew_rate_rise = 20M from (0:inf);
+    // Note: slew_rate_fall should be specified as a negative number.
+    parameter real slew_rate_fall = -20M from (-inf:0);
+
+    // Voltage swing headroom from rails. Default is 100mV.
+    parameter real vout_swing_high = 0.1 from [0:inf);
+    parameter real vout_swing_low = 0.1 from [0:inf);
+
+    analog begin
+        // This single line of code elegantly models two effects in the correct order.
+        // 1. The slew() function takes the ideal internal voltage `V(vin)` and
+        //    limits its rate of change.
+        // 2. The limit() function then takes the result of the slew operation
+        //    and clamps it to the power supply rails, minus the headroom.
+        V(vout) <+ limit( slew(V(vin), slew_rate_rise, slew_rate_fall),
+                          V(vss) + vout_swing_low,
+                          V(vdd) - vout_swing_high );
+    end
+endmodule

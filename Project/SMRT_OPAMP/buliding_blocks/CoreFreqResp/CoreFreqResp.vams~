@@ -1,0 +1,61 @@
+//
+// my_analog_lib/building_blocks/CoreFrequencyResponse.vams -- VERSION 1.0 (PROTOTYPE 1)
+//
+// Description: Models the core, dominant frequency response of an op-amp.
+//              Includes DC Gain, a dominant pole, and a second pole to set phase margin.
+//              This version is the target for the initial, fully functional prototype.
+//
+
+`include "disciplines.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/include/PhysicalConstants/PhysicalConstants.vams"
+
+module CoreFrequencyResponse (in_p, in_n, out);
+    input in_p, in_n;
+    output out;
+    electrical in_p, in_n, out;
+
+    // --- Specification Parameters with Defaults ---
+    parameter real gain_dc = 100k from (1:inf);
+    parameter real gbw = 1M from (0:inf);
+    
+    // --- Mode 0 Parameter ---
+    parameter real phase_margin_deg = 65 from (0:180);
+    
+    // --- Mode 1 Parameter ---
+    parameter real p2_freq = 10M from (0:inf); // Second pole frequency
+
+    // --- Mode Switch ---
+    parameter integer freq_mode = 0 from [0:1]; // 0=Use Phase Margin, 1=Use p2_freq directly
+
+    // Internal variables for calculation
+    real p1_rads;     // Dominant pole in rad/s
+    real p2_rads;     // Second pole in rad/s
+
+    analog begin
+        
+        // --- 1. Calculate the Dominant Pole (p1) ---
+        // This is determined by the DC Gain and the GBW.
+        p1_rads = 2 * `M_PI * (gbw / gain_dc);
+
+        // --- 2. Calculate the Second Pole (p2) based on the selected mode ---
+        if (freq_mode == 0) begin // Phase Margin Mode
+            // This mode calculates the p2 location required to achieve the target phase margin.
+            if (phase_margin_deg >= 90.0) begin
+                p2_rads = 1e15 * 2 * `M_PI; // Place it at infinity for stability
+            end else begin
+                // p2 = GBW / tan(90 - PM)
+                p2_rads = 2 * `M_PI * (gbw / tan((90 - phase_margin_deg) * `M_PI / 180.0));
+            end
+        end else begin // Direct Second Pole Mode
+            // specify p2 directly.
+            p2_rads = 2 * `M_PI * p2_freq;
+        end
+
+        // --- 3. Implement the Two-Pole Transfer Function ---
+        // The transfer function is: Vout = Vin * (gain_dc) / ( (1 + s/p1) * (1 + s/p2) )
+        // This laplace expression models that behavior directly.
+        V(out) <+ laplace_nd( V(in_p, in_n), 
+                              {gain_dc}, 
+                              {1, (1/p1_rads) + (1/p2_rads), 1/(p1_rads * p2_rads)} );
+    end
+endmodule

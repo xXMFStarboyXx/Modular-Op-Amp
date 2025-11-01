@@ -1,0 +1,41 @@
+// FINAL `InputStage.vams` 
+`include "disciplines.vams"
+
+module InputStage (
+    // 6 total pins for a clean symbol
+    in_p_raw, in_n_raw, vdd, vss,
+    in_p_proc, in_n_proc
+);
+    input in_p_raw, in_n_raw, vdd, vss;
+    output in_p_proc, in_n_proc;
+    electrical in_p_raw, in_n_raw, in_p_proc, in_n_proc, vdd, vss;
+
+    // --- Internal "dummy" error nodes ---
+    // These are not connected to anything, so their voltage is 0.
+    // This makes the model work for Prototype 1 while being ready for Prototype 2.
+    electrical v_psrr_error, v_cmrr_error;
+
+    // --- Parameters and Logic ---
+    parameter real icmr_high = 1.6;
+    parameter real icmr_low  = 0.6;
+    parameter real vos = 2m;
+    parameter real ibias = 1p;
+
+    real v_common_mode;
+    real degradation_factor;
+
+    analog begin
+        I(in_p_raw) <+ ibias;
+        I(in_n_raw) <+ ibias;
+        v_common_mode = (V(in_p_raw) + V(in_n_raw)) / 2.0;
+        
+        if ((v_common_mode < icmr_high) && (v_common_mode > icmr_low))
+            degradation_factor = 1.0;
+        else
+            degradation_factor = 1e-3;
+
+        // The error terms V(v_psrr_error) and V(v_cmrr_error) will correctly evaluate to 0.
+        V(in_p_proc) <+ V(in_p_raw) * degradation_factor + vos + V(v_psrr_error) + V(v_cmrr_error);
+        V(in_n_proc) <+ V(in_n_raw) * degradation_factor;
+    end
+endmodule

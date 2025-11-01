@@ -1,0 +1,59 @@
+//
+// my_analog_lib/building_blocks/PSRR_Model.vams -- VERSION 1.0 (PROTOTYPE 1)
+//
+// Description: Placeholder module for modeling Power Supply Rejection Ratio (PSRR).
+//              For Prototype 1, this module produces a zero-voltage error output,
+//              effectively modeling infinite PSRR. This allows the core op-amp
+//              functionality to be debugged in isolation.
+//
+
+`include "disciplines.vams"
+// "physical_constants.vams" is not needed for this
+
+module PSRR_Model (vdd, vss, vout_error);
+    // --- Port Declarations ---
+    // The module "senses" the power supply rails.
+    input vdd, vss;
+    // The module's output is an equivalent input-referred differential error voltage
+    // that will be injected into the main signal path.
+    output vout_error;
+    electrical vdd, vss, vout_error;
+
+    // --- Parameters (Defined but UNUSED in Phase 1) ---
+    // We define the parameters that the Phase 2 version WILL use. This serves
+    // as documentation and makes the module ready for its future upgrade.
+    // PSRR is often specified separately for VDD (PSRR+) and VSS (PSRR-).
+    // For this model, we'll use a single PSRR for simplicity, assuming the
+    // error is dominated by noise on VDD.
+    parameter real psrr_dc_db = 80;         // DC PSRR in Decibels (dB).
+    parameter real psrr_pole_freq = 1k;     // Location of the first pole in the PSRR response (Hz).
+
+    // --- Internal variables section (empty for this version) ---
+    
+    analog begin
+        
+        // In a future version (Phase 2), this block will contain the logic
+        // to model the Power Supply Gain (PSG) and its frequency response.
+        // Power Supply Gain is the inverse of PSRR.
+        // Acm_psrr = pow(10, -psrr_dc_db/20);
+        // The transfer function for the error would look like this:
+        // V(vout_error) <+ laplace_nd( V(vdd), {Acm_psrr}, {1, 1/(2*`M_PI*psrr_pole_freq)} );
+
+        // --- PHASE 1 IMPLEMENTATION: Pass-Through (Zero Error) ---
+        // For this initial prototype, we want the PSRR to be perfect (infinite).
+        // We achieve this by ensuring the error voltage contribution is always zero.
+        V(vout_error) <+ 0;
+
+    end
+endmodule
+
+/*### **Summary of Key Improvements in This Version**
+
+*   **Correct Descriptions:** All comments now accurately describe the module's purpose as a PSRR model.
+*   **Cleaned Up Internals:** Unused variables (`v_common_mode`) have been removed.
+*   **Better Parameter Definition:** I've changed `psrr_dc` to `psrr_dc_db` and specified it in **Decibels (dB)**. This is much more common in datasheets and easier to use. The future "Phase 2" logic will then have to convert this dB value into a linear V/V gain (`pow(10, -psrr_dc_db/20)`). This is a more robust way to parameterize the model.
+*   **Improved Future Logic Comment:** The commented-out `laplace_nd` line now correctly shows that the input to the transfer function will be `V(vdd)` (or `V(vdd, vss)`), making it a clear guide for your future self when you upgrade the module.
+
+This code is now ready. You can confidently perform the unit test we discussed, and you will see the same successful "flat line at 0V" result that you saw for the CMRR test. Your project's foundation is getting stronger with each verified block.
+*/
+

@@ -1,0 +1,43 @@
+//
+// my_analog_lib/building_blocks/SecondPoleFilter.vams -- FINAL ROBUST VERSION
+//
+// Description: Models the second pole and uses a localparam for Pi to ensure
+//              syntactical correctness.
+//
+
+`include "disciplines.vams"
+// `constants.vams` is no longer needed.
+
+module SecondPoleFilter (vin, vout);
+    input vin;
+    output vout;
+    electrical vin, vout;
+    
+    // --- Local Constant Definition ---
+    localparam real M_PI = 3.14159265358979323846;
+
+    // --- Parameters for this stage ---
+    parameter real gbw = 5M from (0:inf);
+    parameter real phase_margin_deg = 60 from (0:180);
+
+    // --- Module-Level Variable Declarations ---
+    real p2_rads, angle_in_rads;
+    real den_coeffs[0:1];
+
+    analog begin
+        
+        if (phase_margin_deg >= 90.0) begin
+            p2_rads = 1e15 * 2 * M_PI; // Use the localparam
+        end else begin
+            angle_in_rads = (90.0 - phase_margin_deg) * (M_PI / 180.0); // Use the localparam
+            p2_rads = (2 * M_PI * gbw) / tan(angle_in_rads); // Use the localparam
+        end
+
+        // Populate the denominator array
+        den_coeffs[0] = 1.0;
+        den_coeffs[1] = 1/p2_rads;
+
+        // Unity-gain, single-pole laplace filter
+        V(vout) <+ laplace_nd( V(vin), {1.0}, den_coeffs );
+    end
+endmodule

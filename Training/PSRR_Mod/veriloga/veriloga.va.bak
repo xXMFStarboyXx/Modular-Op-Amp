@@ -1,0 +1,9 @@
+// VerilogA for Training, PSRR_Mod, veriloga
+
+`include "constants.vams"
+`include "disciplines.vams"
+
+module PSRR_Mod;
+
+
+endmodule

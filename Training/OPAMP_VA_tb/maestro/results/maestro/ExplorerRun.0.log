@@ -1,0 +1,13 @@
+Starting Single Run, Sweeps and Corners...
+
+Current time: Tue Oct  7 07:32:24 2025 
+Best design point: 1
+Design specs: 
+	Training:OPAMP_VA_tb:1	corner	Nominal - 
+Design parameters: 
+
+ExplorerRun.0
+Number of points completed: 1
+Number of simulation errors: 1
+ExplorerRun.0 completed. 
+Current time: Tue Oct  7 07:32:24 2025 

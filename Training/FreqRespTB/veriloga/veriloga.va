@@ -1,0 +1,50 @@
+// VerilogA for Training, FreqRespTB, veriloga
+
+`include "constants.vams"
+
+
+// my_analog_lib/building_blocks/CMRR_Model.vams -- VERSION 1.0 (PROTOTYPE 1)
+//
+// Description: Placeholder module for modeling Common-Mode Rejection Ratio.
+//              For Prototype 1, this module produces a zero-voltage error output,
+//              effectively modeling infinite CMRR. This allows the core op-amp
+//              functionality to be debugged in isolation.
+//
+
+`include "disciplines.vams"
+`include "/home/aditya/Desktop/Project/SMRT_OPAMP/include/PhysicalConstants/PhysicalConstants.vams"
+
+module CMRR_TB (in_p, in_n, vout_error);
+    // --- Port Declarations ---
+    // The module needs to "sense" the common-mode voltage at the input.
+    input in_p, in_n;
+    // The module's output is an equivalent differential error voltage
+    // that will be injected into the main signal path.
+    output vout_error;
+    electrical in_p, in_n, vout_error;
+
+    // --- Parameters (Defined but UNUSED in Phase 1) ---
+    // We define the parameters that the Phase 2 version WILL use.
+    // This serves as documentation and makes the module ready for upgrade.
+    parameter real cmrr_dc = 200k;         // DC CMRR in V/V (e.g., 106 dB).
+    parameter real cmrr_pole_freq = 1k;  // Location of the first pole in the CMRR response.
+
+    // Internal variable
+    real v_common_mode;
+
+    analog begin
+        
+        // In a future version (Phase 2), this block will contain the logic
+        // to model the common-mode gain (Acm) and its frequency response.
+        // The transfer function for the error would be:
+        // V(vout_error) <+ laplace_nd( (V(in_p)+V(in_n))/2, {1/cmrr_dc}, {1, 1/(2*`M_PI*cmrr_pole_freq)} );
+
+        // --- PHASE 1 IMPLEMENTATION: Pass-Through (Zero Error) ---
+        // For this initial prototype, we want the CMRR to be perfect (infinite).
+        // We achieve this by ensuring the error voltage contribution is always zero.
+        V(vout_error) <+ 0;
+
+    end
+endmodule
+
+

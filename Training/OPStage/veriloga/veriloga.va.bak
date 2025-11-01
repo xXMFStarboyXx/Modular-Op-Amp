@@ -1,0 +1,28 @@
+//
+// my_analog_lib/building_blocks/OutputStage.vams -- FINAL, CLEAN VERSION
+//
+// This is the definitive, syntactically correct code for Prototype 1.
+// It includes all necessary libraries and has no test code.
+//
+
+`include "disciplines.vams"
+`include "constants.vams"
+
+module OutputStage (vin, vout, vdd, vss);
+    input vin, vdd, vss;
+    output vout;
+    electrical vin, vout, vdd, vss;
+
+    // --- Parameters with Sensible Defaults ---
+    parameter real slew_rate_rise = 20M from (0:inf);
+    parameter real slew_rate_fall = -20M from (-inf:0);
+    parameter real vout_swing_high = 0.1 from [0:inf);
+    parameter real vout_swing_low = 0.1 from [0:inf);
+
+    analog begin
+        // The analog block contains only this single executable line.
+        V(vout) <+ limit( slew(V(vin), slew_rate_rise, slew_rate_fall),
+                          V(vss) + vout_swing_low,
+                          V(vdd) - vout_swing_high );
+    end
+endmodule
