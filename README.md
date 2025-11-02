@@ -10,4 +10,4 @@ I ended this project after discovering 2 fatal errors in my project:
 
 I took help from AI to guide me in making the modules, rectifying errors or understand concepts especially "DC Convergence Error" which i came across multiple times.
 
-As a conclusion i would like to state ill try making simpler Verilog A modules next time onwards and would only try designing it for only particular parameters which would be criticalk for the intended purpose.
+As a conclusion i would like to state ill try making simpler Verilog A modules next time onwards and would only try designing it for only particular parameters which would be critical for the intended purpose.
